@@ -31,8 +31,8 @@
 
     d. Copy the password that appears when the window appears
 
-    > [!Caution]
-    > - If you close the window, you won't see the password again, so make sure to copy it
+> [!Caution]
+> - If you close the window, you won't see the password again, so make sure to copy it
 
 3. Create `.env` and fill in the contents below
 
