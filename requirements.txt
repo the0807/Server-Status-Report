@@ -1,4 +1,7 @@
+python-dotenv
 psutil
 schedule
 secure-smtplib
-python-dotenv
+pandas
+matplotlib
+seaborn
