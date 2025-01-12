@@ -181,7 +181,7 @@ def check_server_status():
         last_sent = last_alert_status["disk"]["last_sent"]
         if not last_alert_status["disk"]["alerted"] or (last_sent and now - last_sent >= ALERT_INTERVAL):
             subject = f"[{SERVER_NAME}] High Disk Usage Alert({now.strftime('%Y-%m-%d %H:%M:%S')})"
-            body += f"""
+            body = f"""
 <html>
     <body>
         <p><span style="font-weight: bold;">[{SERVER_NAME}] High Disk Usage Alert({now.strftime('%Y-%m-%d %H:%M:%S')})</span></p> 
