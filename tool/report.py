@@ -5,6 +5,12 @@ from datetime import datetime, timedelta
 from dotenv import load_dotenv
 import os
 
+import csv
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+from matplotlib.dates import DateFormatter
+
 from tool.send import send_email
 
 load_dotenv()
@@ -21,6 +27,10 @@ last_alert_status = {
 
 # 알림 재발송 간격
 ALERT_INTERVAL = timedelta(hours=6)
+
+# 파일 경로
+CSV_FILE_PATH = 'log.csv'
+IMG_SAVE_PATH = 'log.png'
 
 # GPU 상태 확인 함수
 def get_gpu_status():
@@ -64,6 +74,75 @@ def get_color(value):
 # 하루 1번 실행 (전체 보고)
 def daily_report():
     now = datetime.now()
+    
+    if not os.path.exists(CSV_FILE_PATH):
+        print("No data available for the report.")
+        return
+    
+    # CSV 데이터 읽기
+    data = pd.read_csv(CSV_FILE_PATH)
+    data['timestamp'] = pd.to_datetime(data['timestamp'])
+    
+    # GPU 관련 열 추출
+    gpu_utilization_columns = [col for col in data.columns if 'gpu_' in col and '_utilization' in col]
+    gpu_memory_columns = [col for col in data.columns if 'gpu_' in col and '_memory_usage' in col]
+
+    # 그래프 수 계산 (기본 CPU, 메모리, 디스크 + 각 GPU 별 1개씩)
+    num_graphs = 3 + len(gpu_utilization_columns)
+
+    # 그래프 생성
+    fig, ax = plt.subplots(num_graphs, 1, figsize=(14, 5 * num_graphs))
+    
+    # 전체 제목 설정
+    fig.suptitle(f"Server Status Report({now.strftime('%Y-%m-%d')})", fontsize=28)
+    
+    # DateFormatter를 사용하여 시간만 표시)
+    time_format = DateFormatter('%H:%M')
+    
+    # CPU 그래프
+    ax[0].plot(data['timestamp'], data['cpu_usage'], label='CPU Usage (%)', color=sns.color_palette()[0])
+    ax[0].set_title('CPU Usage Over Time', fontsize=16)
+    ax[0].set_xlabel('Time')
+    ax[0].set_ylabel('Usage (%)')
+    ax[0].legend(loc='upper right')
+    ax[0].xaxis.set_major_formatter(time_format)
+    
+    # 메모리 그래프
+    ax[1].plot(data['timestamp'], data['memory_usage'], label='Memory Usage (%)', color=sns.color_palette()[1])
+    ax[1].set_title('Memory Usage Over Time', fontsize=16)
+    ax[1].set_xlabel('Time')
+    ax[1].set_ylabel('Usage (%)')
+    ax[1].legend(loc='upper right')
+    ax[1].xaxis.set_major_formatter(time_format)
+    
+    # 디스크 그래프
+    ax[2].plot(data['timestamp'], data['disk_usage'], label='Disk Usage (%)', color=sns.color_palette()[2])
+    ax[2].set_title('Disk Usage Over Time', fontsize=16)
+    ax[2].set_xlabel('Time')
+    ax[2].set_ylabel('Usage (%)')
+    ax[2].legend(loc='upper right')
+    ax[2].xaxis.set_major_formatter(time_format)
+    
+    # GPU 그래프
+    for idx, (gpu_util, gpu_mem) in enumerate(zip(gpu_utilization_columns, gpu_memory_columns), start=3):
+        gpu_id = gpu_util.split('_')[1]  # GPU ID 추출
+        ax[idx].plot(data['timestamp'], data[gpu_util], label=f'GPU {gpu_id} Utilization (%)', color=sns.color_palette()[3])
+        ax[idx].plot(data['timestamp'], data[gpu_mem], label=f'GPU {gpu_id} Memory Usage (%)', color=sns.color_palette()[0])
+        ax[idx].set_title(f'GPU {gpu_id} Usage Over Time', fontsize=16)
+        ax[idx].set_xlabel('Time')
+        ax[idx].set_ylabel('Usage (%)')
+        ax[idx].legend(loc='upper right')
+        ax[idx].xaxis.set_major_formatter(time_format)
+    
+    plt.tight_layout(rect=[0, 0, 1, 0.97])
+    plt.subplots_adjust(hspace=0.4)
+    
+    # 그래프를 이미지로 저장
+    plt.savefig(IMG_SAVE_PATH, format='png', bbox_inches='tight')
+    plt.close()
+    
+    # CSV 삭제
+    os.remove(CSV_FILE_PATH)
     
     # 메모리, CPU, GPU 정보 가져오기
     memory = psutil.virtual_memory()
@@ -116,7 +195,12 @@ def daily_report():
         </p>
             """
             body += gpu_info
-        
+    
+    body += f"""
+        <p><span style="font-weight: bold;"></span></p>
+        <img src="cid:graph_image">
+    """
+
     # 닫는 태그 추가
     body += """
     </body>
@@ -124,7 +208,7 @@ def daily_report():
     """
 
     # 이메일 전송
-    send_email(f"[{SERVER_NAME}] Daily Server Report({now.strftime('%Y-%m-%d')})", body)
+    send_email(f"[{SERVER_NAME}] Daily Server Report({now.strftime('%Y-%m-%d')})", body, True)
     
 # 상태 확인 함수
 def check_server_status():
@@ -132,6 +216,8 @@ def check_server_status():
     subject = None
     
     now = datetime.now()
+    
+    write_header = not os.path.exists(CSV_FILE_PATH)
     
     # CPU 사용량 확인
     cpu_percent = psutil.cpu_percent(interval=1)
@@ -152,7 +238,7 @@ def check_server_status():
             """
         
             # 이메일 전송
-            send_email(subject, body)
+            send_email(subject, body, False)
             last_alert_status["cpu"] = {"alerted": True, "last_sent": now}
     else:
         last_alert_status["cpu"]["alerted"] = False
@@ -181,7 +267,7 @@ def check_server_status():
             """
     
             # 이메일 전송
-            send_email(subject, body)
+            send_email(subject, body, False)
             last_alert_status["memory"] = {"alerted": True, "last_sent": now}
     else:
         last_alert_status["memory"]["alerted"] = False
@@ -210,7 +296,29 @@ def check_server_status():
             """
 
             # 이메일 전송
-            send_email(subject, body)
+            send_email(subject, body, False)
             last_alert_status["disk"] = {"alerted": True, "last_sent": now}
     else:
         last_alert_status["disk"]["alerted"] = False
+
+    # GPU 상태 확인
+    gpu_status = get_gpu_status()
+
+    # CSV 파일에 데이터 저장
+    row = {
+        "timestamp": now.strftime('%Y-%m-%d %H:%M:%S'),
+        "cpu_usage": cpu_percent,
+        "memory_usage": memory.percent,
+        "disk_usage": disk.percent
+    }
+    if gpu_status:
+        for i, gpu in enumerate(gpu_status):
+            row[f"gpu_{i}_utilization"] = gpu['utilization']
+            row[f"gpu_{i}_memory_usage"] = gpu['memory_percent']
+    
+    with open(CSV_FILE_PATH, 'a', newline='') as csvfile:
+        fieldnames = row.keys()
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+        if write_header:
+            writer.writeheader()
+        writer.writerow(row)
