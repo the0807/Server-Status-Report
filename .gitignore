@@ -1,3 +1,4 @@
 .env
 tool/__pycache__
 log.*
+report.png

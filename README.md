@@ -9,13 +9,13 @@
 </div>
 
 # 📌 Function
-- Email reports at 8 a.m. every day
+- Create an email report on tracking servers from the previous day at 8 a.m. daily(attached as an image to the mail)
 
 <div align="center">
 <img width="473" alt="daily" src="https://github.com/user-attachments/assets/b4587ed9-6a02-4d2d-821f-255cb59680d3" />
 </div>
 
-- Check resources every minute and send mail when it exceeds 80%
+- Check resources every minute and send mail when it exceeds 80%(reminders of unresolved issues every 6 hours)
 
 <div align="center">
 <img width="473" alt="cpu" src="https://github.com/user-attachments/assets/2c3b4a86-ed51-4135-97a6-ae7ae8b1172c" />

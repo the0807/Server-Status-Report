@@ -16,7 +16,7 @@ EMAIL_PASSWORD = os.environ.get('EMAIL_PASSWORD')
 RECIPIENT_EMAIL = os.environ.get('RECIPIENT_EMAIL')
 
 # 파일 경로
-IMG_SAVE_PATH = 'log.png'
+IMG_SAVE_PATH = 'report.png'
 
 # 이메일 보내기 함수
 def send_email(subject, body, daily):

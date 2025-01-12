@@ -30,7 +30,7 @@ ALERT_INTERVAL = timedelta(hours=6)
 
 # 파일 경로
 CSV_FILE_PATH = 'log.csv'
-IMG_SAVE_PATH = 'log.png'
+IMG_SAVE_PATH = 'report.png'
 
 # GPU 상태 확인 함수
 def get_gpu_status():
@@ -100,39 +100,43 @@ def daily_report():
     time_format = DateFormatter('%H:%M')
     
     # CPU 그래프
-    ax[0].plot(data['timestamp'], data['cpu_usage'], label='CPU Usage (%)', color=sns.color_palette()[0])
+    ax[0].plot(data['timestamp'], data['cpu_usage'], label='CPU Usage (%)', color=sns.color_palette()[0], linewidth=2)
     ax[0].set_title('CPU Usage Over Time', fontsize=16)
     ax[0].set_xlabel('Time')
     ax[0].set_ylabel('Usage (%)')
     ax[0].legend(loc='upper right')
     ax[0].xaxis.set_major_formatter(time_format)
+    ax[0].set_ylim(0, 100)
     
     # 메모리 그래프
-    ax[1].plot(data['timestamp'], data['memory_usage'], label='Memory Usage (%)', color=sns.color_palette()[1])
+    ax[1].plot(data['timestamp'], data['memory_usage'], label='Memory Usage (%)', color=sns.color_palette()[1], linewidth=2)
     ax[1].set_title('Memory Usage Over Time', fontsize=16)
     ax[1].set_xlabel('Time')
     ax[1].set_ylabel('Usage (%)')
     ax[1].legend(loc='upper right')
     ax[1].xaxis.set_major_formatter(time_format)
+    ax[1].set_ylim(0, 100)
     
     # 디스크 그래프
-    ax[2].plot(data['timestamp'], data['disk_usage'], label='Disk Usage (%)', color=sns.color_palette()[2])
+    ax[2].plot(data['timestamp'], data['disk_usage'], label='Disk Usage (%)', color=sns.color_palette()[2], linewidth=2)
     ax[2].set_title('Disk Usage Over Time', fontsize=16)
     ax[2].set_xlabel('Time')
     ax[2].set_ylabel('Usage (%)')
     ax[2].legend(loc='upper right')
     ax[2].xaxis.set_major_formatter(time_format)
+    ax[2].set_ylim(0, 100)
     
     # GPU 그래프
     for idx, (gpu_util, gpu_mem) in enumerate(zip(gpu_utilization_columns, gpu_memory_columns), start=3):
         gpu_id = gpu_util.split('_')[1]  # GPU ID 추출
-        ax[idx].plot(data['timestamp'], data[gpu_util], label=f'GPU {gpu_id} Utilization (%)', color=sns.color_palette()[3])
-        ax[idx].plot(data['timestamp'], data[gpu_mem], label=f'GPU {gpu_id} Memory Usage (%)', color=sns.color_palette()[0])
+        ax[idx].plot(data['timestamp'], data[gpu_util], label=f'GPU {gpu_id} Utilization (%)', color=sns.color_palette()[3], linewidth=2)
+        ax[idx].plot(data['timestamp'], data[gpu_mem], label=f'GPU {gpu_id} Memory Usage (%)', color=sns.color_palette()[0], linewidth=2)
         ax[idx].set_title(f'GPU {gpu_id} Usage Over Time', fontsize=16)
         ax[idx].set_xlabel('Time')
         ax[idx].set_ylabel('Usage (%)')
         ax[idx].legend(loc='upper right')
         ax[idx].xaxis.set_major_formatter(time_format)
+        ax[idx].set_ylim(0, 100)
     
     plt.tight_layout(rect=[0, 0, 1, 0.97])
     plt.subplots_adjust(hspace=0.4)
