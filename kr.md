@@ -12,7 +12,7 @@
 - 매일 8시마다 보고서 이메일 보내기
 
 <div align="center">
-<img width="473" alt="daily" src="https://github.com/user-attachments/assets/f2f21a97-24e1-4fa1-8940-845eb07c9c6e" />
+<img width="473" alt="daily" src="https://github.com/user-attachments/assets/b4587ed9-6a02-4d2d-821f-255cb59680d3" />
 </div>
 
 - 매분 리소스 사용량을 확인하고 80%를 초과하면 이메일 보내기

@@ -9,10 +9,10 @@
 </div>
 
 # 📌 Function
-- Send report email every 8 o'clock every day
+- Email reports at 8 a.m. every day
 
 <div align="center">
-<img width="473" alt="daily" src="https://github.com/user-attachments/assets/f2f21a97-24e1-4fa1-8940-845eb07c9c6e" />
+<img width="473" alt="daily" src="https://github.com/user-attachments/assets/b4587ed9-6a02-4d2d-821f-255cb59680d3" />
 </div>
 
 - Check resources every minute and send mail when it exceeds 80%

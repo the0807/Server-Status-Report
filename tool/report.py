@@ -32,9 +32,20 @@ def get_gpu_status():
             gpu_status = []
             for gpu in gpu_data:
                 used_memory, total_memory, utilization = map(int, gpu.split(','))
+                
+                used_memory_gb = used_memory / 1024
+                used_memory_gb_rounded = round(used_memory_gb, 2)
+                
+                total_memory_gb = total_memory / 1024
+                total_memory_gb_rounded = round(total_memory_gb, 2)
+                
+                percentage = (used_memory_gb / total_memory_gb) * 100
+                percentage_rounded = round(percentage, 1)
+                
                 gpu_status.append({
-                    'used_memory': used_memory,
-                    'total_memory': total_memory,
+                    'used_memory': used_memory_gb_rounded,
+                    'total_memory': total_memory_gb_rounded,
+                    'memory_percent': percentage_rounded,
                     'utilization': utilization
                 })
             return gpu_status
@@ -95,10 +106,14 @@ def daily_report():
     if gpu_status:
         for i, gpu in enumerate(gpu_status):
             gpu_info = f"""
-        <span style="font-weight: bold;">GPU {i}:</span> 
-        {gpu['used_memory']}MB / {gpu['total_memory']}MB 
-        (<span style="color:{get_color(gpu['utilization'])};">{gpu['utilization']}%</span>)
+        <p>
+        <span style="font-weight: bold;">GPU {i} Utilization:</span> 
+        <span style="color:{get_color(gpu['utilization'])};">{gpu['utilization']}%</span>
         <br>
+        <span style="font-weight: bold;">GPU {i} Memory Usage:</span> 
+        {gpu['used_memory']}GB / {gpu['total_memory']}GB 
+        (<span style="color:{get_color(gpu['memory_percent'])};">{gpu['memory_percent']}%</span>)
+        </p>
             """
             body += gpu_info
         
