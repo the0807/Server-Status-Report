@@ -107,12 +107,15 @@
     sudo systemctl status server_status.service
     ```
 
+> [!Note]
+> -  서버를 시작할 때 이메일 알림을 받으면 정상적으로 실행되는 것입니다.
+
 # ❗️ Troubleshooting
 
 ### ⭐️ 서비스 상태가 실패인 경우
 터미널에서 `server_status.service` 파일의 `ExecStart`를 직접 실행하여 문제를 확인하세요.
 
-    ``` shell
-    # 실시간 로그 확인
-    journalctl -f server_status.service
-    ```
+``` shell
+# 실시간 로그 확인
+journalctl -f server_status.service
+```

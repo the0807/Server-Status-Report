@@ -108,12 +108,15 @@
     sudo systemctl status server_status.service
     ```
 
+> [!Note]
+> -  If you receive a email notification when you start the server, it will run normally
+
 # ❗️ Troubleshooting
 
 ### ⭐️ If the status of the service is Fail
 Run `ExecStart` of the `server_status.service` file directly from the terminal to identify the problem.
 
-    ``` shell
-    # Check real-time logs
-    journalctl -f server_status.service
-    ```
+``` shell
+# Check real-time logs
+journalctl -f server_status.service
+```
