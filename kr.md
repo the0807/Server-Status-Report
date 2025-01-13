@@ -2,14 +2,14 @@
 
 # Server-Status-Report
 
-### 🖥️ Tracking server status(CPU, Memory, GPU, Disk) and sending reports to mail
+### 🖥️ Tracking server status(CPU, Memory, GPU, Disk) and sending reports to email
 
 🚀 [`English version`](README.md)
 
 </div>
 
 # 📌 Function
-- 매일 오전 8시에 전날의 서버 추적에 관한 이메일 보고서를 보내기(메일에 이미지로 첨부)
+- 매일 오전 8시에 전날의 서버 추적에 관한 이메일 보고서를 보내기(이메일에 이미지로 첨부)
 
 <div align="center">
 <img width="473" alt="daily" src="https://github.com/user-attachments/assets/b4587ed9-6a02-4d2d-821f-255cb59680d3" />
@@ -21,6 +21,12 @@
 <img width="473" alt="cpu" src="https://github.com/user-attachments/assets/2c3b4a86-ed51-4135-97a6-ae7ae8b1172c" />
 <img width="473" alt="mem" src="https://github.com/user-attachments/assets/9a4443ff-b949-4606-93f4-30636d9013e4" />
 <img width="473" alt="disk" src="https://github.com/user-attachments/assets/b076fd5c-4f2c-4d3f-8c59-7096d0b31a22" />
+</div>
+
+- 이메일로 서비스 시작 알림
+
+<div align="center">
+<img width="770" alt="start" src="https://github.com/user-attachments/assets/c8e0567b-de65-4807-bc11-6ce3e027ab2c" />
 </div>
 
 # ✏️ Usase
@@ -72,13 +78,14 @@
     # 아래에 내용을 추가하세요(경로에 따라 수정)
     [Unit]
     Description=Server Status Monitoring Script
-    After=network.target
+    After=multi-user.target
 
     [Service]
     # ExecStart, WorkingDirectory 경로가 올바른지 확인하세요.
     ExecStart=/usr/bin/python3 /home/ubuntu/Server-Status-Report/main.py
     WorkingDirectory=/home/ubuntu/Server-Status-Report
-    Restart=always
+    Restart=on-failure
+    RestartSec=30s
     # 사용자가 올바른지 확인하세요.
     User=ubuntu
 
@@ -89,6 +96,7 @@
     b. 서비스 활성화 및 시작
 
     ``` shell
+    # `server_status.service`을 수정하면 아래의 명령어를 다시 실행하세요
     sudo systemctl daemon-reload
     sudo systemctl enable server_status.service
     sudo systemctl start server_status.service
@@ -103,3 +111,8 @@
 
 ### ⭐️ 서비스 상태가 실패인 경우
 터미널에서 `server_status.service` 파일의 `ExecStart`를 직접 실행하여 문제를 확인하세요.
+
+    ``` shell
+    # 실시간 로그 확인
+    journalctl -f server_status.service
+    ```
