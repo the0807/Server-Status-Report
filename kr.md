@@ -11,8 +11,12 @@
 # 📌 Function
 - 매일 오전 8시에 전날의 서버 추적에 관한 이메일 보고서를 보내기(이메일에 이미지로 첨부)
 
+<div align="center">
+
 |<img width="473" alt="daily" src="https://github.com/user-attachments/assets/f0f33322-d858-43ee-a5fe-1d6e13a28e62" />|<img width="473" alt="daily" src="https://github.com/user-attachments/assets/8e438fe1-7d14-4d83-b873-2d3a15595edd" />|
 |:---:|:---:|
+
+</div>
 
 - 매분 리소스 사용량을 확인하고 80%를 초과하면 이메일 보내기(해결 되지않은 문제는 6시간마다 다시 알림)
 
