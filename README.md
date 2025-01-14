@@ -27,7 +27,7 @@
 <img width="473" alt="disk" src="https://github.com/user-attachments/assets/b076fd5c-4f2c-4d3f-8c59-7096d0b31a22" />
 </div>
 
-- Notification of service start by email
+- Notification of service start by email(e.g. on reboot)
 
 <div align="center">
 <img width="770" alt="start" src="https://github.com/user-attachments/assets/c8e0567b-de65-4807-bc11-6ce3e027ab2c" />
