@@ -94,7 +94,7 @@ def daily_report():
     fig, ax = plt.subplots(num_graphs, 1, figsize=(14, 5 * num_graphs))
     
     # 전체 제목 설정
-    fig.suptitle(f"Server Status Report({now.strftime('%Y-%m-%d')})", fontsize=28)
+    fig.suptitle(f"[{SERVER_NAME}] Server Status Report({now.strftime('%Y-%m-%d')})", fontsize=28)
     
     # DateFormatter를 사용하여 시간만 표시)
     time_format = DateFormatter('%H:%M')
