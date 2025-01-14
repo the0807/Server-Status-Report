@@ -12,9 +12,8 @@
 
 - Create an email report on tracking servers from the previous day at 8 a.m. daily(attached as an image to the email)
 
-<div align="center">
-<img width="473" alt="daily" src="https://github.com/user-attachments/assets/b4587ed9-6a02-4d2d-821f-255cb59680d3" />
-</div>
+|<img width="473" alt="daily" src="https://github.com/user-attachments/assets/f0f33322-d858-43ee-a5fe-1d6e13a28e62" />|<img width="473" alt="daily" src="https://github.com/user-attachments/assets/8e438fe1-7d14-4d83-b873-2d3a15595edd" />|
+|:---:|:---:|
 
 - Check resources every minute and send email when it exceeds 80%(reminders of unresolved issues every 6 hours)
 
